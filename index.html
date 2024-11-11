@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fale com o RISK - Uma nova aventura</title>
+  <title>Fale com o RiskBot - Uma nova aventura</title>
   <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -71,7 +71,7 @@
 
   <script type="text/babel">
     const CHARACTERS = {
-      Risk: { emoji: '🤖', color: 'bg-gray-500' },
+      RiskBot: { emoji: '🤖', color: 'bg-gray-500' },
       Rui: { emoji: '👨🏽‍⚕️', color: 'bg-blue-500' },
       Ana: { emoji: '👩‍🔧', color: 'bg-pink-500' },
       Cris: { emoji: '👩🏽‍⚖️', color: 'bg-purple-500' }
@@ -183,9 +183,9 @@
           {!showExplanation && !isLoading && (
             <div className="flex justify-start">
               <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                <CharacterAvatar character="Risk" />
+                <CharacterAvatar character="RiskBot" />
                 <div className="flex flex-col">
-                  <p className="font-semibold">Risk</p>
+                  <p className="font-semibold">RiskBot</p>
                   <button
                     onClick={handleExplanationRequest}
                     className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
@@ -202,9 +202,9 @@
             <div className="space-y-4">
               <div className="flex justify-start">
                 <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                  <CharacterAvatar character="Risk" />
+                  <CharacterAvatar character="RiskBot" />
                   <div className="flex flex-col">
-                    <p className="font-semibold">Risk</p>
+                    <p className="font-semibold">RiskBot</p>
                     <button
                       onClick={handleNextMessage}
                       className="bg-gray-200 text-left p-2 rounded-lg flex items-center space-x-2 cursor-pointer hover:bg-gray-300 transition-colors"
@@ -218,9 +218,9 @@
               {extraMessages.map((message, index) => (
                 <div key={index} className="flex justify-start">
                   <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                    <CharacterAvatar character="Risk" />
+                    <CharacterAvatar character="RiskBot" />
                     <div className="flex flex-col">
-                      <p className="font-semibold">Risk</p>
+                      <p className="font-semibold">RiskBot</p>
                       {index === extraMessages.length - 1 ? (
                         <button
                           onClick={handleNextMessage}
@@ -246,8 +246,8 @@
 
     function ChatInterface() {
       const [messages, setMessages] = React.useState([
-        { character: 'Risk', text: 'Olá! Bem-vindos ao bate-papo entre Rui, Ana e Cris. Iremos testar sua habilidade de ambidestria no seu dia a dia ☀️.' },
-        { character: 'Risk', text: 'Vamos iniciar o bate-papo?', isButton: true }
+        { character: 'RiskBot', text: 'Olá! Bem-vindos ao bate-papo entre Rui, Ana e Cris. Iremos testar sua habilidade de ambidestria no seu dia a dia ☀️.' },
+        { character: 'RiskBot', text: 'Vamos iniciar o bate-papo?', isButton: true }
       ]);
       const [currentQuestion, setCurrentQuestion] = React.useState(0);
       const [isTyping, setIsTyping] = React.useState(false);
@@ -288,7 +288,7 @@
           setIsTyping(false);
           if (questionIndex < QUESTIONS.length) {
             addMessage(QUESTIONS[questionIndex].character, QUESTIONS[questionIndex].text);
-            addMessage('Risk', 'Qual das respostas você escolheria?');
+            addMessage('RiskBot', 'Qual das respostas você escolheria?');
             setShowAnswers(true);
           }
         }, 2000);
@@ -316,13 +316,13 @@
             <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white text-2xl">
               🤖
             </div>
-            <span className="font-bold">RiskBot AI</span>
+            <span className="font-bold">RiskBotBot AI</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ height: 'calc(100% - 160px)', minHeight: '0' }}>
             {messages.map((msg, index) => (
-              <div key={index} className={`flex ${msg.character === 'Risk' ? 'justify-center' : 'justify-start'}`}>
+              <div key={index} className={`flex ${msg.character === 'RiskBot' ? 'justify-center' : 'justify-start'}`}>
                 <div className={`flex items-start space-x-2 ${
-                  msg.character === 'Risk'
+                  msg.character === 'RiskBot'
                     ? msg.isButton ? 'bg-blue-500 text-white cursor-pointer' : 'bg-gray-200'
                     : 'bg-blue-100'
                 } rounded-lg p-2 ${msg.isButton ? 'hover:bg-blue-600 transition-colors' : ''}`}
@@ -391,7 +391,7 @@
           <div className="bg-white p-2 border-t border-gray-200 h-[60px] flex items-center justify-center">
             {isTyping && <TypingIndicator />}
             {!isTyping && !showAnswers && (
-              <span className="text-sm text-gray-400">RiskBot está pronto para responder</span>
+              <span className="text-sm text-gray-400">RiskBotBot está pronto para responder</span>
             )}
           </div>
         </div>

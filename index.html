@@ -9,6 +9,26 @@
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
+    .phone-wrapper {
+      max-width: 375px;
+      height: 667px;
+      margin: 20px auto;
+      border: 16px solid #000;
+      border-radius: 36px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 640px) {
+      .phone-wrapper {
+        max-width: 100%;
+        height: 100vh;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+      }
+    }
     @keyframes bounce {
       0%, 80%, 100% { transform: translateY(0); }
       40% { transform: translateY(-10px); }
@@ -42,37 +62,12 @@
       flex-shrink: 0;
       transform: rotate(45deg);
     }
-    .phone-frame {
-      position: relative;
-      width: 375px;
-      height: 667px;
-      border: 16px solid black;
-      border-radius: 36px;
-      overflow: hidden;
-    }
-
-    .phone-top-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 44px;
-      background-color: #f3f4f6;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      z-index: 10;
-    }
-
-    .phone-content {
-      height: 100%;
-      overflow-y: auto;
-      padding-top: 44px;
-    }
   </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-  <div id="root"></div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="phone-wrapper">
+    <div id="root"></div>
+  </div>
 
   <script type="text/babel">
     const CHARACTERS = {
@@ -100,13 +95,26 @@
       { character: 'Cris', text: 'Gente eu tenho conta para pagar 💵 e um futuro para preservar. Eu não vou arriscar o meu futuro neste mundo maluco.', competency: 1 }
     ];
 
-    function ResultExplanation({ competencyScore }) {
-      const CharacterAvatar = ({ character }) => (
-        <div className={`character-avatar ${CHARACTERS[character].color}`}>
-          {CHARACTERS[character].emoji}
+    const TypingIndicator = () => (
+      <div className="flex justify-center my-2">
+        <div className="bg-gray-200 rounded-full px-4 py-2">
+          <div className="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
-      );
+        <span className="ml-2 text-sm text-gray-500">Nova mensagem chegando...</span>
+      </div>
+    );
 
+    const CharacterAvatar = ({ character }) => (
+      <div className={`character-avatar ${CHARACTERS[character].color}`}>
+        {CHARACTERS[character].emoji}
+      </div>
+    );
+
+    function ResultExplanation({ competencyScore }) {
       const [showExplanation, setShowExplanation] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(false);
       const [explanation, setExplanation] = React.useState('');
@@ -118,10 +126,10 @@
           const score2 = competencyScore[2];
           let newExplanation = '';
 
-           if (score1 > score2) {
-            newExplanation = "Em nossa vida cotidiana, precisamos adotar comportamentos que nos tragam novas experiências. Notei que você gosta disso 😍, o que é muito bom. No entanto, é importante manter atenção ⚠️ e pensar com cautela, para não correr riscos excessivos. Para que sejamos ambidestros, temos que buscar o equilíbro. Fique atento a isto.";
+          if (score1 > score2) {
+            newExplanation = "Em nossa vida cotidiana, precisamos adotar comportamentos que nos tragam novas experiências. Notei que você gosta disso 😍, o que é muito bom. No entanto, é importante manter atenção ⚠️ e pensar com cautela, para não correr riscos excessivos. Para que sejamos ambidestros, temos que buscar o equilíbrio. Fique atento a isto.";
           } else if (score2 > score1) {
-            newExplanation = "Percebi que você é bastate pragmático 🧐 e tem muitas preocupações com o seu futuro. Isto é muito bacana. Mas temos que experimentar o novo também 🆕, por que nem sempre o mundo será a mesma coisa. O equilíbro nos trás a capacidade de ser ambidestro. Pense nisto";
+            newExplanation = "Percebi que você é bastante pragmático 🧐 e tem muitas preocupações com o seu futuro. Isto é muito bacana. Mas temos que experimentar o novo também 🆕, porque nem sempre o mundo será a mesma coisa. O equilíbrio nos traz a capacidade de ser ambidestro. Pense nisso.";
           } else {
             newExplanation = "Você sabia que tem grandes possibilidades de apresentar ambidestria 🥳🎉 em sua vida pessoal? Note que é um pouco pragmático, mas também gosta de experimentar novas aventuras 🚀. Parabéns! Essa é uma habilidade muito importante para encontrarmos a alegria de viver.";
           }
@@ -132,42 +140,15 @@
         }, 2000);
       };
 
-      const PaperPlaneIcon = () => (
-        <svg xmlns="http://www.w3.org/2000/svg" className="paper-plane-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" />
-        </svg>
-      );
-
-      const TypingIndicator = () => (
-        <div className="flex justify-start my-2">
-          <div className="bg-gray-200 rounded-full px-4 py-2">
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-      );
-
       return (
         <div className="mt-4">
           {!showExplanation && !isLoading && (
-            <div className="flex justify-start">
-              <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                <CharacterAvatar character="Risk" />
-                <div className="flex flex-col">
-                  <p className="font-semibold">Risk</p>
-                  <button
-                    onClick={handleExplanationRequest}
-                    className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
-                  >
-                    <span>Quer que eu explique o resultado?</span>
-                    <PaperPlaneIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <button
+              onClick={handleExplanationRequest}
+              className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
+            >
+              <span>Quer que eu explique o resultado?</span>
+            </button>
           )}
           {isLoading && <TypingIndicator />}
           {showExplanation && (
@@ -181,27 +162,6 @@
                   </div>
                 </div>
               </div>
-              <div className="flex justify-start">
-                <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                  <CharacterAvatar character="Risk" />
-                  <div className="flex flex-col">
-                    <p className="font-semibold">Risk</p>
-                    <p>
-						<p>Já ouviu aquele ditado: assoviar e chupar cana? 😗</p> 
-						<p>Exatamente! A ambidestria envolve a capacidade de realizar tarefas distintas simultaneamente, algo semelhante a "assoviar e chupar cana" ♎️. Essa habilidade de equilibrar diferentes competências torna a pessoa mais apta a experimentar novas aventuras e, com isso, descobrir novas fontes de felicidade. Ela permite uma flexibilidade que é essencial para explorar o mundo de forma mais completa e enriquecedora 🥰 😘.</p>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-start mt-4">
-                <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
-                  <CharacterAvatar character="Risk" />
-                  <div className="flex flex-col">
-                    <p className="font-semibold">Risk</p>
-                    <p>Obrigado por participar! Espero que essas informações tenham sido úteis para você.</p>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
         </div>
@@ -210,9 +170,7 @@
 
     function ChatInterface() {
       const [messages, setMessages] = React.useState([
-        { character: 'Risk', text: 
-			'Olá! Bem-vindos ao bate-papo entre Rui, Ana e Cris. Iremos testar as suas habilidade de **AMBIDESTRIA no seu dia a dia ☀️**' 
-		},
+        { character: 'Risk', text: 'Olá! Bem-vindos ao bate-papo entre Rui, Ana e Cris. Iremos testar sua habilidade de ambidestria no seu dia a dia ☀️.' },
         { character: 'Risk', text: 'Vamos iniciar o bate-papo?', isButton: true }
       ]);
       const [currentQuestion, setCurrentQuestion] = React.useState(0);
@@ -220,7 +178,13 @@
       const [showAnswers, setShowAnswers] = React.useState(false);
       const [competencyScore, setCompetencyScore] = React.useState({ 1: 0, 2: 0 });
       const [showResult, setShowResult] = React.useState(false);
-      const [conversationStarted, setConversationStarted] = React.useState(false);
+      const messagesEndRef = React.useRef(null);
+
+      React.useEffect(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, [messages, isTyping, showAnswers]);
 
       const addMessage = (character, text, isAnswer = false) => {
         setMessages(prev => [...prev, { character, text, isAnswer }]);
@@ -233,16 +197,13 @@
           [answer.competency]: Math.min(prev[answer.competency] + 1, 4)
         }));
         setShowAnswers(false);
-        
-        setCurrentQuestion(prev => {
-          const next = prev + 1;
-          if (next < QUESTIONS.length) {
-            setTimeout(() => simulateTyping(next), 1000);
-          } else {
-            setShowResult(true);
-          }
-          return next;
-        });
+        const nextQuestionIndex = currentQuestion + 1;
+        setCurrentQuestion(nextQuestionIndex);
+        if (nextQuestionIndex < QUESTIONS.length) {
+          setTimeout(() => simulateTyping(nextQuestionIndex), 1000);
+        } else {
+          setShowResult(true);
+        }
       };
 
       const simulateTyping = (questionIndex) => {
@@ -251,140 +212,111 @@
           setIsTyping(false);
           if (questionIndex < QUESTIONS.length) {
             addMessage(QUESTIONS[questionIndex].character, QUESTIONS[questionIndex].text);
-            setIsTyping(true);
-            setTimeout(() => {
-              setIsTyping(false);
-              addMessage('Risk', 'Qual das respostas você escolheria?');
-              setIsTyping(true);
-              setTimeout(() => {
-                setIsTyping(false);
-                setShowAnswers(true);
-              }, 1000);
-            }, 1000);
-          } else {
-            setShowResult(true);
+            addMessage('Risk', 'Qual das respostas você escolheria?');
+            setShowAnswers(true);
           }
         }, 2000);
       };
 
       const startConversation = () => {
-        setConversationStarted(true);
         simulateTyping(0);
       };
 
-      const TypingIndicator = () => (
-        <div className="flex justify-start my-2">
-          <div className="bg-gray-200 rounded-full px-4 py-2">
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-      );
-
-      const CharacterAvatar = ({ character }) => (
-        <div className={`character-avatar ${CHARACTERS[character].color}`}>
-          {CHARACTERS[character].emoji}
-        </div>
-      );
-
-      const PaperPlaneIcon = () => (
-        <svg xmlns="http://www.w3.org/2000/svg" className="paper-plane-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" />
-        </svg>
-      );
-
       return (
-        <div className="phone-frame">
-          <div className="phone-top-bar">
+        <div className="bg-white w-full h-full flex flex-col">
+          <div className="bg-black text-white p-2 flex justify-between items-center">
+            <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <div className="w-32 h-8 bg-black rounded-b-2xl flex justify-center items-center">
+              <div className="w-16 h-4 bg-gray-800 rounded-full"></div>
+            </div>
             <div className="flex items-center space-x-2">
-              <div className={`character-avatar ${CHARACTERS['Risk'].color}`}>
-                {CHARACTERS['Risk'].emoji}
+              <span>5G</span>
+              <div className="w-6 h-3 bg-white rounded-sm relative">
+                <div className="absolute right-0.5 top-0.5 bottom-0.5 w-1 bg-black rounded-sm"></div>
               </div>
-              <span className="font-semibold">RiskBot AI</span>
             </div>
           </div>
-          <div className="phone-content">
-            <div className="bg-white rounded-lg shadow-lg w-full h-full flex flex-col">
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((msg, index) => (
-                  <div key={index} className={`flex ${msg.character === 'Risk' ? 'justify-center' : 'justify-start'}`}>
-                    <div className={`flex items-start space-x-2 ${
-                      msg.character === 'Risk' 
-                        ? msg.isButton ? 'bg-blue-500 text-white cursor-pointer' : 'bg-gray-200'
-                        : msg.isAnswer 
-                          ? 'bg-green-100' 
-                          : 'bg-blue-100'
-                    } rounded-lg p-2 ${msg.isButton ? 'hover:bg-blue-600 transition-colors' : ''}`}
-                    onClick={msg.isButton && !conversationStarted ? startConversation : undefined}>
-                      <CharacterAvatar character={msg.character} />
-                      <div className="flex flex-col">
-                        <p className="font-semibold">{msg.character}</p>
-                        <div className="flex items-center">
-                          <p>{msg.text}</p>
-                          {msg.isButton && <PaperPlaneIcon />}
+          <div className="bg-gray-800 text-white p-2 flex items-center space-x-2 sticky top-0 z-10">
+            <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white text-2xl">
+              🤖
+            </div>
+            <span className="font-bold">RiskBot AI</span>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ height: 'calc(100% - 160px)', minHeight: '0' }}>
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.character === 'Risk' ? 'justify-center' : 'justify-start'}`}>
+                <div className={`flex items-start space-x-2 ${
+                  msg.character === 'Risk'
+                    ? msg.isButton ? 'bg-blue-500 text-white cursor-pointer' : 'bg-gray-200'
+                    : 'bg-blue-100'
+                } rounded-lg p-2 ${msg.isButton ? 'hover:bg-blue-600 transition-colors' : ''}`}
+                onClick={msg.isButton ? startConversation : undefined}>
+                  <CharacterAvatar character={msg.character} />
+                  <div className="flex flex-col">
+                    <p className="font-semibold">{msg.character}</p>
+                    <p>{msg.text}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+          {showAnswers && (
+            <div className="p-4 space-y-2">
+              {ANSWERS.slice(currentQuestion * 2, currentQuestion * 2 + 2).map((answer, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleAnswer(answer)}
+                  className="flex items-center space-x-2 bg-green-100 rounded-lg p-2 cursor-pointer hover:bg-green-200 transition-colors"
+                >
+                  <CharacterAvatar character={answer.character} />
+                  <div className="flex-grow">
+                    <p className="font-semibold">{answer.character}</p>
+                    <p>{answer.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {showResult && (
+            <div className="p-4 space-y-4">
+              <h2 className="text-center font-bold text-xl mb-4">Resultado</h2>
+              {[1, 2].map(competency => (
+                <div key={competency} className="mb-8">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-bold text-xl">
+                      {competency === 1 ? 'Aventureiro' : 'Tradicional'}
+                    </span>
+                    <span className="font-bold text-lg">Score: {competencyScore[competency] * 25}%</span>
+                  </div>
+                  <div className="relative">
+                    <div className="absolute w-full h-1 bg-gray-200 top-1/2 transform -translate-y-1/2"></div>
+                    <div className="relative flex justify-between">
+                      {[0, 25, 50, 75, 100].map((percent) => (
+                        <div key={percent} className="flex flex-col items-center">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold ${
+                              percent <= competencyScore[competency] * 25
+                                ? competency === 1 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                                : 'bg-gray-300 text-gray-600'
+                            }`}
+                          >
+                            <span className="whitespace-nowrap">{percent}%</span>
+                          </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-                {isTyping && <TypingIndicator />}
-              </div>
-              {showAnswers && (
-                <div className="p-4 space-y-2">
-                  {ANSWERS.slice(currentQuestion * 2, currentQuestion * 2 + 2).map((answer, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleAnswer(answer)}
-                      className="flex items-center space-x-2 bg-green-100 rounded-lg p-2 cursor-pointer hover:bg-green-200 transition-colors"
-                    >
-                      <CharacterAvatar character={answer.character} />
-                      <div className="flex-grow">
-                        <p className="font-semibold">{answer.character}</p>
-                        <p>{answer.text}</p>
-                      </div>
-                      <PaperPlaneIcon />
-                    </div>
-                  ))}
                 </div>
-              )}
-              {showResult && (
-                <div className="p-4 space-y-4">
-                  <h2 className="text-center font-bold text-xl mb-4">Resultado</h2>
-                  {[1, 2].map(competency => (
-                    <div key={competency} className="mb-8">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-bold text-xl">
-							 {competency === 1 ? 'Aventureiro' : 'Tradicional'}
-					</span>		 
-                        <span className="font-bold text-lg">Score: {competencyScore[competency] * 25}%</span>
-                      </div>
-                      <div className="relative">
-                        <div className="absolute w-full h-1 bg-gray-200 top-1/2 transform -translate-y-1/2"></div>
-                        <div className="relative flex justify-between">
-                          {[0, 25, 50, 75, 100].map((percent) => (
-                            <div key={percent} className="flex flex-col items-center">
-                              <div 
-                                className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold ${
-                                  percent <= competencyScore[competency] * 25
-                                    ? competency === 1 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
-                                    : 'bg-gray-300 text-gray-600'
-                                }`}
-                              >
-                                <span className="whitespace-nowrap">{percent}%</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <ResultExplanation competencyScore={competencyScore} />
-                </div>
-              )}
+              ))}
+              <ResultExplanation competencyScore={competencyScore} />
             </div>
+          )}
+          <div className="bg-white p-2 border-t border-gray-200 h-[60px] flex items-center justify-center">
+            {isTyping && <TypingIndicator />}
+            {!isTyping && !showAnswers && (
+              <span className="text-sm text-gray-400">RiskBot está pronto para responder</span>
+            )}
           </div>
         </div>
       );

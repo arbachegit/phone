@@ -118,6 +118,7 @@
       const [showExplanation, setShowExplanation] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(false);
       const [explanation, setExplanation] = React.useState('');
+      const messagesEndRef = React.useRef(null);
 
       const handleExplanationRequest = () => {
         setIsLoading(true);
@@ -137,18 +138,29 @@
           setExplanation(newExplanation);
           setIsLoading(false);
           setShowExplanation(true);
+          if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+          }
         }, 2000);
       };
 
       return (
         <div className="mt-4">
           {!showExplanation && !isLoading && (
-            <button
-              onClick={handleExplanationRequest}
-              className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
-            >
-              <span>Quer que eu explique o resultado?</span>
-            </button>
+            <div className="flex justify-start">
+              <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
+                <CharacterAvatar character="Risk" />
+                <div className="flex flex-col">
+                  <p className="font-semibold">Risk</p>
+                  <button
+                    onClick={handleExplanationRequest}
+                    className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
+                  >
+                    <span>Quer que eu explique o resultado?</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
           {isLoading && <TypingIndicator />}
           {showExplanation && (
@@ -164,6 +176,7 @@
               </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       );
     }

@@ -125,6 +125,7 @@
       const [isLoading, setIsLoading] = React.useState(false);
       const [explanation, setExplanation] = React.useState('');
       const [extraMessages, setExtraMessages] = React.useState([]);
+      const [showTypingIndicator, setShowTypingIndicator] = React.useState(false);
       const messagesEndRef = React.useRef(null);
 
       const handleExplanationRequest = () => {
@@ -153,13 +154,21 @@
 
       const handleNextMessage = () => {
         if (extraMessages.length === 0) {
-          setExtraMessages(prev => [...prev, {
-            text: "Já ouviu aquele ditado: assoviar e chupar cana? 😗 Exatamente! A ambidestria envolve a capacidade de realizar tarefas distintas simultaneamente, algo semelhante a 'assoviar e chupar cana' ♎️. Essa habilidade de equilibrar diferentes competências torna a pessoa mais apta a experimentar novas aventuras e, com isso, descobrir novas fontes de felicidade.",
-          }]);
+          setExtraMessages(prev => [
+            ...prev,
+            {
+              text: "Já ouviu aquele ditado: assoviar e chupar cana? 😗 Exatamente! A ambidestria envolve a capacidade de realizar tarefas distintas simultaneamente, algo semelhante a 'assoviar e chupar cana' ♎️. Essa habilidade de equilibrar diferentes competências torna a pessoa mais apta a experimentar novas aventuras e, com isso, descobrir novas fontes de felicidade.",
+            }
+          ]);
         } else if (extraMessages.length === 1) {
-          setExtraMessages(prev => [...prev, {
-            text: "Obrigado por participar! Espero que essas informações tenham sido úteis para você.",
-          }]);
+          setShowTypingIndicator(true);
+          setTimeout(() => {
+            setShowTypingIndicator(false);
+            setExtraMessages(prev => [
+              ...prev,
+              { text: "Obrigado por participar! Espero que essas informações tenham sido úteis para você." }
+            ]);
+          }, 2000);
         }
       };
 
@@ -167,7 +176,7 @@
         if (messagesEndRef.current) {
           messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-      }, [extraMessages]);
+      }, [extraMessages, showTypingIndicator]);
 
       return (
         <div className="mt-4">
@@ -212,11 +221,22 @@
                     <CharacterAvatar character="Risk" />
                     <div className="flex flex-col">
                       <p className="font-semibold">Risk</p>
-                      <p>{message.text}</p>
+                      {index === extraMessages.length - 1 ? (
+                        <button
+                          onClick={handleNextMessage}
+                          className="bg-gray-200 text-left p-2 rounded-lg flex items-center space-x-2 cursor-pointer hover:bg-gray-300 transition-colors"
+                        >
+                          <span>{message.text}</span>
+                          <PaperPlaneIcon />
+                        </button>
+                      ) : (
+                        <p>{message.text}</p>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
+              {showTypingIndicator && <TypingIndicator />}
             </div>
           )}
           <div ref={messagesEndRef} />

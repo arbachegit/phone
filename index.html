@@ -114,10 +114,17 @@
       </div>
     );
 
+    const PaperPlaneIcon = () => (
+      <svg xmlns="http://www.w3.org/2000/svg" className="paper-plane-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" />
+      </svg>
+    );
+
     function ResultExplanation({ competencyScore }) {
       const [showExplanation, setShowExplanation] = React.useState(false);
       const [isLoading, setIsLoading] = React.useState(false);
       const [explanation, setExplanation] = React.useState('');
+      const [extraMessages, setExtraMessages] = React.useState([]);
       const messagesEndRef = React.useRef(null);
 
       const handleExplanationRequest = () => {
@@ -144,6 +151,24 @@
         }, 2000);
       };
 
+      const handleNextMessage = () => {
+        if (extraMessages.length === 0) {
+          setExtraMessages(prev => [...prev, {
+            text: "Já ouviu aquele ditado: assoviar e chupar cana? 😗 Exatamente! A ambidestria envolve a capacidade de realizar tarefas distintas simultaneamente, algo semelhante a 'assoviar e chupar cana' ♎️. Essa habilidade de equilibrar diferentes competências torna a pessoa mais apta a experimentar novas aventuras e, com isso, descobrir novas fontes de felicidade.",
+          }]);
+        } else if (extraMessages.length === 1) {
+          setExtraMessages(prev => [...prev, {
+            text: "Obrigado por participar! Espero que essas informações tenham sido úteis para você.",
+          }]);
+        }
+      };
+
+      React.useEffect(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, [extraMessages]);
+
       return (
         <div className="mt-4">
           {!showExplanation && !isLoading && (
@@ -157,6 +182,7 @@
                     className="bg-blue-500 text-white rounded-lg p-2 flex items-center space-x-2 hover:bg-blue-600 transition-colors"
                   >
                     <span>Quer que eu explique o resultado?</span>
+                    <PaperPlaneIcon />
                   </button>
                 </div>
               </div>
@@ -170,10 +196,27 @@
                   <CharacterAvatar character="Risk" />
                   <div className="flex flex-col">
                     <p className="font-semibold">Risk</p>
-                    <p>{explanation}</p>
+                    <button
+                      onClick={handleNextMessage}
+                      className="bg-gray-200 text-left p-2 rounded-lg flex items-center space-x-2 cursor-pointer hover:bg-gray-300 transition-colors"
+                    >
+                      <span>{explanation}</span>
+                      <PaperPlaneIcon />
+                    </button>
                   </div>
                 </div>
               </div>
+              {extraMessages.map((message, index) => (
+                <div key={index} className="flex justify-start">
+                  <div className="flex items-start space-x-2 bg-gray-200 rounded-lg p-2">
+                    <CharacterAvatar character="Risk" />
+                    <div className="flex flex-col">
+                      <p className="font-semibold">Risk</p>
+                      <p>{message.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
           <div ref={messagesEndRef} />
